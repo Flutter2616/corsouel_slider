@@ -17,45 +17,66 @@ class _TablescreenState extends State<Tablescreen> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: DataTable(
-            columns: [
-              DataColumn(label: Text("id")),
-              DataColumn(label: Text("Name")),
-              DataColumn(label: Text("Course")),
-              DataColumn(label: Text("Phone no.")),
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: [
+              Obx(
+                () => DataTable(
+                  columns: [
+                    DataColumn(label: Text("id")),
+                    DataColumn(label: Text("Name")),
+                    DataColumn(label: Text("Course")),
+                    DataColumn(label: Text("Phone no.")),
+                  ],
+                  rows: [
+                    for (int i = 0; i < controller.tablelist.length; i++)
+                      cells(controller.tablelist[i], i),
+                  ],
+                  border: TableBorder.all(color: Colors.white, width: 1),
+                  dataRowColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.grey.shade300),
+                  headingRowColor:
+                      MaterialStateColor.resolveWith((states) => Colors.black),
+                  headingTextStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
+              )
             ],
-            rows: controller.tablelist
-                .map(
-                  (e) => DataRow(
-                    cells: [
-                      DataCell(
-                        Text("${e['id']}"),
-                      ),
-                      DataCell(
-                        Text("${e['name']}"),
-                      ),
-                      DataCell(
-                        Text("${e['course']}"),
-                      ),
-                      DataCell(
-                        Text("${e['no']}"),
-                      ),
-                    ],
-                  onSelectChanged: (value) {
-
-                  },selected: false),
-                )
-                .toList(),
-            border: TableBorder.all(color: Colors.white, width: 1),
-            dataRowColor: MaterialStateColor.resolveWith(
-                (states) => Colors.grey.shade300),
-            headingRowColor:
-                MaterialStateColor.resolveWith((states) => Colors.black),
-            headingTextStyle: TextStyle(
-                color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ),
       ),
+    );
+  }
+
+  DataRow cells(Map<dynamic, dynamic> e, int i) {
+    return DataRow(
+      cells: [
+        DataCell(
+          Text("${e['id']}"),
+        ),
+        DataCell(
+          Text("${e['name']}"),
+        ),
+        DataCell(
+          Text("${e['course']}"),
+        ),
+        DataCell(
+          Text("${e['no']}"),
+        ),
+      ],
+      selected: e['select'],
+      onSelectChanged: (value) {
+        Map m1 = {
+          "id": e['id'],
+          "name": "${e['name']}",
+          "course": "${e['course']}",
+          "no": e['no'],
+          "select": value,
+        };
+        controller.tablelist[i]=m1;
+      },
     );
   }
 }
